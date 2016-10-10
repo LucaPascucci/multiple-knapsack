@@ -14,7 +14,7 @@ public class View extends JFrame implements ActionListener{
     private Controller controller;
     private JTextArea textArea = new JTextArea(42,50);
     private JFileChooser fileChooser;
-    private JButton startACObtn = new JButton("Esegui ACO");
+    private JButton startACObtn = new JButton("Esegui ale.ACO");
     private JButton startGAbtn = new JButton("Esegui Algoritmo genetico");
     private JButton loadbtn = new JButton("Carica istanza");
 

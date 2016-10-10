@@ -1,4 +1,4 @@
-package common;
+package ale.common;
 
 public class Main {
 

@@ -1,4 +1,4 @@
-package common;
+package ale.common;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -10,9 +10,9 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import ACO.KnapsackACO;
-import common.View.IViewObserver;
-import genetic.KnapsackGA;
+import ale.ACO.KnapsackACO;
+import ale.common.View.IViewObserver;
+import ale.genetic.KnapsackGA;
 
 public class Controller implements IViewObserver {
 

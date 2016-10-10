@@ -54,7 +54,7 @@ public class Controller {
         new Thread(()->{
             this.view.changeButtonsState(false);
             if (value){
-                //ACO
+                //ale.ACO
             } else {
                 //GA
             }

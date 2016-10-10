@@ -1,4 +1,4 @@
-package common;
+package ale.common;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -29,7 +29,7 @@ public class View extends JFrame implements ActionListener {
 	private static final int LOAD_IDX = 0;
 	private IViewObserver observer;
 	private JButton startGABtn = new JButton("Esegui Algoritmo Genetico");
-	private JButton startACOBtn = new JButton("Esegui ACO");
+	private JButton startACOBtn = new JButton("Esegui ale.ACO");
 	private JTextArea textArea = new JTextArea(45,50);
 	private final JMenuBar menuBar;
 	private final JMenu optionMenu;

@@ -1,11 +1,11 @@
-package genetic;
+package ale.genetic;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 
-import common.View;
+import ale.common.View;
 
 public class KnapsackGA {
 

@@ -21,12 +21,12 @@ public class KnapsackGA {
 	private double totalFitnessOfGeneration = 0;
 	private List<Double> valueOfItems;
 	private List<Double> weightOfItems;
-	private List<Double> fitness = new ArrayList<Double>();
-	private List<Double> bestFitnessOfGeneration = new ArrayList<Double>();
-	private List<Double> meanFitnessOfGeneration = new ArrayList<Double>();
-	private List<String> population = new ArrayList<String>();
-	private List<String> breedPopulation = new ArrayList<String>();
-	private List<String> bestSolutionOfGeneration = new ArrayList<String>();
+	private List<Double> fitness = new ArrayList<>();
+	private List<Double> bestFitnessOfGeneration = new ArrayList<>();
+	private List<Double> meanFitnessOfGeneration = new ArrayList<>();
+	private List<String> population = new ArrayList<>();
+	private List<String> breedPopulation = new ArrayList<>();
+	private List<String> bestSolutionOfGeneration = new ArrayList<>();
 	private View view;
 
 	public KnapsackGA(final int nItems, final double knapsackCapacity, final List<Double> weightOfItems, final List<Double> valueOfItems, final View view) {

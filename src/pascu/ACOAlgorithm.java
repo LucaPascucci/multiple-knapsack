@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Luca on 13/09/16.
+ * Created by Luca on 11/10/16.
  */
-public class GeneticAlgorithm extends Thread{
+public class ACOAlgorithm extends Thread {
 
     private View view;
     private List<Double> knapsaksCapacity;
     private List<Double> weightOfItems;
     private List<Double> valueOfItems;
 
-    public GeneticAlgorithm(final View view, final List<Double> knapsaksCapacity, final List<Double> weightOfItems, final List<Double> valueOfItems){
-        super("GA Thread");
+    public ACOAlgorithm (final View view, final List<Double> knapsaksCapacity, final List<Double> weightOfItems, final List<Double> valueOfItems) {
+        super("ACO Thread");
         this.view = view;
         this.knapsaksCapacity = new ArrayList<>(knapsaksCapacity);
         this.weightOfItems = new ArrayList<>(weightOfItems);

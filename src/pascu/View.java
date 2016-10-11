@@ -14,8 +14,8 @@ public class View extends JFrame implements ActionListener{
     private Controller controller;
     private JTextArea textArea = new JTextArea(42,50);
     private JFileChooser fileChooser;
-    private JButton startACObtn = new JButton("Esegui ale.ACO");
-    private JButton startGAbtn = new JButton("Esegui Algoritmo genetico");
+    private JButton startACObtn = new JButton("Esegui Algoritmo ACO");
+    private JButton startGAbtn = new JButton("Esegui Algoritmo Genetico");
     private JButton loadbtn = new JButton("Carica istanza");
 
     public View (){
@@ -89,18 +89,25 @@ public class View extends JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(this.loadbtn)){
-            if (this.fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            if (this.fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 this.controller.loadDataCmd(this.fileChooser.getSelectedFile().getPath());
             }
+
         }
 
         if (e.getSource().equals(this.startACObtn)){
-
+            this.controller.startAlgoritm(true);
         }
 
         if (e.getSource().equals(this.startGAbtn)){
-
+            this.controller.startAlgoritm(false);
         }
+
+        //Salvataggio risultato
+        /*if (this.fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            this.controller.saveDataCmd(this.fileChooser.getSelectedFile().getPath());
+        }*/
+
     }
 
     public void showInfoMessage(String message){

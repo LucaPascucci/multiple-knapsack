@@ -1,6 +1,8 @@
 package pascu;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Luca on 13/09/16.
@@ -8,6 +10,9 @@ import java.io.*;
 public class Controller {
 
     private View view;
+    private List<Double> knapsaksCapacity;
+    private List<Double> weightOfItems;
+    private List<Double> valueOfItems;
 
     public Controller(View view){
         this.view = view;
@@ -15,13 +20,24 @@ public class Controller {
 
     public void loadDataCmd(String path) {
 
+        this.knapsaksCapacity = new ArrayList<>();
+        this.weightOfItems = new ArrayList<>();
+        this.valueOfItems = new ArrayList<>();
+
         String line;
+        String[] splittedLine;
         BufferedReader in;
         try {
             in = new BufferedReader(new FileReader(path));
             line = in.readLine();
+            splittedLine = line.split("\\W+");
+            for (String s: splittedLine){
+                this.knapsaksCapacity.add(Double.parseDouble(s));
+            }
             while ((line = in.readLine()) != null) {
-
+                splittedLine = line.split("\\W+");
+                this.weightOfItems.add(Double.parseDouble(splittedLine[0]));
+                this.valueOfItems.add(Double.parseDouble(splittedLine[0]));
             }
             in.close();
             this.view.resetTextArea();

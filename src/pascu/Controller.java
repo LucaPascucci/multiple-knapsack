@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Luca on 13/09/16.
+ * @author  Luca Pascucci
+ * @version 1.0
+ * @since   2016-10-16
  */
+
 public class Controller {
 
     private static final String NEW_LINE = "\n";

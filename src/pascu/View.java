@@ -7,8 +7,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Created by Luca on 13/09/16.
+ * @author  Luca Pascucci
+ * @version 1.0
+ * @since   2016-10-16
  */
+
 public class View extends JFrame implements ActionListener{
 
     private Controller controller;

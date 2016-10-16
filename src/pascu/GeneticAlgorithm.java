@@ -5,12 +5,11 @@ import java.util.List;
 import java.util.Random;
 
 /**
- *
- *
  * @author  Luca Pascucci
  * @version 1.0
  * @since   2016-10-16
  */
+
 public class GeneticAlgorithm extends Thread{
 
     private static final String NEW_LINE = "\n";

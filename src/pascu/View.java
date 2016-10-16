@@ -18,11 +18,13 @@ public class View extends JFrame implements ActionListener{
     private JButton startGAbtn = new JButton("Esegui Algoritmo Genetico");
     private JButton loadbtn = new JButton("Carica istanza");
 
+
+    //TODO aggiungere bottone salvataggio
     public View (){
 
         this.setSize(650,750);
         this.setResizable(false);
-        this.setTitle("Bin Packing Problem Solver");
+        this.setTitle("Multiple Knapsack Problem Solver");
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
 
@@ -96,11 +98,11 @@ public class View extends JFrame implements ActionListener{
         }
 
         if (e.getSource().equals(this.startACObtn)){
-            this.controller.startAlgoritm(true);
+            this.controller.startAlgorithm(true);
         }
 
         if (e.getSource().equals(this.startGAbtn)){
-            this.controller.startAlgoritm(false);
+            this.controller.startAlgorithm(false);
         }
 
         //Salvataggio risultato

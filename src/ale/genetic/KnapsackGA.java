@@ -266,7 +266,6 @@ public class KnapsackGA {
 				currSum += calculateFitness(this.population.get(i));
 			}
 		}
-
 		return 0;
 	}
 
@@ -308,7 +307,7 @@ public class KnapsackGA {
 			String chromosome = iterator.next();
 			for (int i = 0; i < chromosome.length(); i++) {
 				double mutationProb = Math.random();
-				if (mutationProb <= probMutation) { //se il numero casuale è minore o uguale della probabilità di mutazione, cambio valore al gene
+				if (mutationProb <= this.probMutation) { //se il numero casuale è minore o uguale della probabilità di mutazione, cambio valore al gene
 					if (chromosome.charAt(i) == '0') { //gene a 0, da mutare in 1
 						chromosome = chromosome.substring(0, i) + "1" + chromosome.substring(i + 1);
 					} else { //gene a 1, da mutare a 0

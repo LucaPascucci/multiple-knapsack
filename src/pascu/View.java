@@ -5,6 +5,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 /**
  * @author  Luca Pascucci
@@ -15,14 +16,14 @@ import java.awt.event.ActionListener;
 public class View extends JFrame implements ActionListener{
 
     private Controller controller;
-    private JTextArea textArea = new JTextArea(42,50);
+    private JTextArea textArea = new JTextArea(40,50);
     private JFileChooser fileChooser;
     private JButton startACObtn = new JButton("Esegui Algoritmo ACO");
     private JButton startGAbtn = new JButton("Esegui Algoritmo Genetico");
-    private JButton loadbtn = new JButton("Carica istanza");
+    private final JMenuItem loadDataset = new JMenuItem("Carica");
+    private final JMenuItem saveResult = new JMenuItem("Salva");
 
 
-    //TODO aggiungere bottone salvataggio
     public View (){
 
         this.setSize(650,750);
@@ -31,16 +32,22 @@ public class View extends JFrame implements ActionListener{
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
 
+        this.loadDataset.addActionListener(this);
+        this.saveResult.addActionListener(this);
+        this.saveResult.setVisible(false);
+
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(this.loadDataset);
+        menuBar.add(this.saveResult);
+
         this.startACObtn.setEnabled(false);
         this.startGAbtn.setEnabled(false);
         this.startACObtn.addActionListener(this);
         this.startGAbtn.addActionListener(this);
-        this.loadbtn.addActionListener(this);
 
         this.setLayout(new BorderLayout());
 
         JPanel controlPanel = new JPanel();
-        controlPanel.add(this.loadbtn);
         controlPanel.add(this.startGAbtn);
         controlPanel.add(this.startACObtn);
 
@@ -53,12 +60,9 @@ public class View extends JFrame implements ActionListener{
 
         this.add(controlPanel,BorderLayout.PAGE_START);
         this.add(container,BorderLayout.CENTER);
+        this.setJMenuBar(menuBar);
 
-        this.fileChooser = new JFileChooser();
-        final FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt", "txt");
-        this.fileChooser.setFileFilter(filter);
-
-        this.textArea.append("Caricare un'istanza");
+        this.textArea.append("Caricare un dataset");
 
     }
 
@@ -93,12 +97,6 @@ public class View extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(this.loadbtn)){
-            if (this.fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                this.controller.loadDataCmd(this.fileChooser.getSelectedFile().getPath());
-            }
-
-        }
 
         if (e.getSource().equals(this.startACObtn)){
             this.controller.startAlgorithm(true);
@@ -108,10 +106,22 @@ public class View extends JFrame implements ActionListener{
             this.controller.startAlgorithm(false);
         }
 
-        //Salvataggio risultato
-        /*if (this.fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            this.controller.saveDataCmd(this.fileChooser.getSelectedFile().getPath());
-        }*/
+        if (e.getSource().equals(this.loadDataset)){
+            this.fileChooser = new JFileChooser();
+            this.fileChooser.setDialogTitle("Scegli il dataset da caricare");
+            this.fileChooser.setFileFilter(new FileNameExtensionFilter(".txt", "txt"));
+            if (this.fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                this.controller.loadDataCmd(this.fileChooser.getSelectedFile().getAbsolutePath());
+            }
+        }
+
+        if (e.getSource().equals(this.saveResult)){
+            this.fileChooser = new JFileChooser();
+            this.fileChooser.setDialogTitle("Scegli dove salvare il risultato");
+            if (this.fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                this.controller.saveDataCmd(this.fileChooser.getSelectedFile().getAbsolutePath());
+            }
+        }
 
     }
 
@@ -125,5 +135,9 @@ public class View extends JFrame implements ActionListener{
         SwingUtilities.invokeLater(()->
             JOptionPane.showMessageDialog(this,message,"Errore",JOptionPane.ERROR_MESSAGE)
         );
+    }
+
+    public void setSaveEnabled(boolean value){
+        SwingUtilities.invokeLater(()->this.saveResult.setVisible(value));
     }
 }

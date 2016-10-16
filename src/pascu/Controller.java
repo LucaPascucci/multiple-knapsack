@@ -19,7 +19,6 @@ public class Controller {
     private List<Double> weightOfItems;
     private List<Double> valueOfItems;
 
-    //TODO stampare l'istanza caricata
     public Controller(final View view){
         this.view = view;
     }
@@ -48,12 +47,13 @@ public class Controller {
             in.close();
             this.view.resetTextArea();
             this.view.changeButtonsState(true);
-            this.view.showInfoMessage("Istanza caricata correttamente, scegliere metodo per risolverla.");
+            this.view.showInfoMessage("Istanza caricata correttamente, scegliere un algoritmo per risolverla.");
         } catch (IOException e) {
             e.printStackTrace();
             this.view.showErrorMessage("Errore nel caricamento dell'istanza");
         }
         this.printData();
+        this.view.setSaveEnabled(false);
         this.view.changeButtonsState(true);
     }
 

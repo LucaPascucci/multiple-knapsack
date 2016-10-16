@@ -11,9 +11,9 @@ public class Controller {
 
     private static final String REGEX = "\\W+";
     private View view;
-    private GeneticAlgorithm geneticAlgorithm;
-    private ACOAlgorithm acoAlgorithm;
-    //TODO mettere le liste qua
+    private List<Double> knapsaksCapacity;
+    private List<Double> weightOfItems;
+    private List<Double> valueOfItems;
 
     public Controller(final View view){
         this.view = view;
@@ -21,9 +21,9 @@ public class Controller {
 
     public void loadDataCmd(final String path) {
 
-        List<Double> knapsaksCapacity = new ArrayList<>();
-        List<Double> weightOfItems = new ArrayList<>();
-        List<Double> valueOfItems = new ArrayList<>();
+        this.knapsaksCapacity = new ArrayList<>();
+        this.weightOfItems = new ArrayList<>();
+        this.valueOfItems = new ArrayList<>();
 
         String line;
         String[] splittedLine;
@@ -33,12 +33,12 @@ public class Controller {
             line = in.readLine();
             splittedLine = line.split(REGEX);
             for (String s: splittedLine){
-                knapsaksCapacity.add(Double.parseDouble(s));
+                this.knapsaksCapacity.add(Double.parseDouble(s));
             }
             while ((line = in.readLine()) != null) {
                 splittedLine = line.split(REGEX);
-                weightOfItems.add(Double.parseDouble(splittedLine[0]));
-                valueOfItems.add(Double.parseDouble(splittedLine[0]));
+                this.weightOfItems.add(Double.parseDouble(splittedLine[0]));
+                this.valueOfItems.add(Double.parseDouble(splittedLine[0]));
             }
             in.close();
             this.view.resetTextArea();
@@ -48,9 +48,6 @@ public class Controller {
             e.printStackTrace();
             this.view.showErrorMessage("Errore nel caricamento dell'istanza");
         }
-
-        this.geneticAlgorithm = new GeneticAlgorithm(this.view, knapsaksCapacity, weightOfItems, valueOfItems);
-        this.acoAlgorithm = new ACOAlgorithm(this.view, knapsaksCapacity, weightOfItems, valueOfItems);
         this.view.resetTextArea();
         this.view.changeButtonsState(true);
     }
@@ -69,18 +66,11 @@ public class Controller {
 
     public void startAlgoritm(final boolean value){
         this.view.resetTextArea();
-        //TODO sistemare il riavvio degli algoritmi
+        this.view.changeButtonsState(false);
         if (value) {
-            //TODO istanziare ACO ed avviarlo
-            if (this.acoAlgorithm != null && !this.acoAlgorithm.isAlive()){
-                this.view.changeButtonsState(false);
-                this.acoAlgorithm.start();
-            }
+            new ACOAlgorithm(this.view, this.knapsaksCapacity, this.weightOfItems, this.valueOfItems).start();
         } else {
-            //TODO istanziare GA ed avviarlo
-            if (this.geneticAlgorithm != null && !this.geneticAlgorithm.isAlive()){
-                this.geneticAlgorithm.start();
-            }
+            new GeneticAlgorithm(this.view, this.knapsaksCapacity, this.weightOfItems, this.valueOfItems).start();
         }
     }
 

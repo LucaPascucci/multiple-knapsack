@@ -27,4 +27,6 @@ public class GeneticAlgorithm extends Thread{
         this.view.appendText("" + this.getName());
         this.view.changeButtonsState(true);
     }
+
+
 }

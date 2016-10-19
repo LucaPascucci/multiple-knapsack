@@ -13,8 +13,8 @@ public class GeneticAlgorithm extends Thread{
     private static final String NEW_LINE = "\n";
 
     private static final int NUMBER_GENERATIONS = 70;
-    private static final double PROB_CROSSOVER = 0.55;
-    private static final double PROB_MUTATION = 0.15;
+    private static final double PROB_CROSSOVER = 0.6;
+    private static final double PROB_MUTATION = 0.1;
 
     private View view;
     private List<Double> knapsacksVolume;
@@ -151,7 +151,8 @@ public class GeneticAlgorithm extends Thread{
         for (int i = 0; i < this.numberItems; i ++){
             knapsack = Character.getNumericValue(chromosome.charAt(i));
             if (knapsack > 0) {
-                freeVolume.add(knapsack - 1,(freeVolume.get(knapsack - 1) - this.weightOfItems.get(i)));
+                double tmpVolume = freeVolume.get(knapsack - 1) - this.weightOfItems.get(i);
+                freeVolume.set(knapsack - 1,tmpVolume);
                 fitnessValue += this.valueOfItems.get(i);
             }
         }
@@ -255,7 +256,7 @@ public class GeneticAlgorithm extends Thread{
 
     private void showBestResult(){
         if (!"".equals(this.bestChromosome)){
-            this.view.appendText(NEW_LINE + NEW_LINE + "Soluzione migliore trovata: " + this.bestChromosome);
+            this.view.appendText("Soluzione migliore trovata: " + this.bestChromosome);
             this.view.appendText(NEW_LINE + "Valore totale con la soluzione migliore trovata = " + this.bestFitness);
         } else {
             this.view.appendText("Non è stata riscontrata nessuna soluzione accettabile.");

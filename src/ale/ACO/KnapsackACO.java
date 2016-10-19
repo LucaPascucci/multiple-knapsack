@@ -6,10 +6,16 @@ import ale.common.View;
 
 public class KnapsackACO {
 
+    //per calcolare l'attrattività e la traccia
 	private double alpha = 0.5;
 	private double beta = 0.5;
+
+    //variabile dell'evaporazione
 	private double rho = 0.9;
+
+    //numero formiche
 	private int nAnts;
+
 	private int nIters = 20;
 	private int maxValue;
 	private List<Integer> bestSol;
@@ -27,8 +33,10 @@ public class KnapsackACO {
 	public KnapsackACO(final int nItems, final double knapsackCapacity, final List<Double> weightOfItems, final List<Double> valueOfItems, View view) {
 		this.valueOfItems = new ArrayList<>();
 		this.weightOfItems = new ArrayList<>();
+
+
 		this.valueOfItems.add(0.0); //aggiungo un oggetto fittizio da cui partire per costruire ogni mia soluzione
-		this.weightOfItems.add(0.0);
+		this.weightOfItems.add(0.0); //aggiungo un oggetto fittizio da cui partire per costruire ogni mia soluzione
 		this.nItems = nItems + 1;
 		this.nAnts = nItems;
 		this.knapsackCapacity = knapsackCapacity;
@@ -36,6 +44,7 @@ public class KnapsackACO {
 		this.valueOfItems.addAll(valueOfItems);
 		this.view = view;
 		this.bestSol = new ArrayList<>();
+
 		this.eta = new double[this.nItems][this.nItems];
 		this.tau = new double[this.nItems][this.nItems];
 		this.max = 0;

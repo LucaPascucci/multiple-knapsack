@@ -5,7 +5,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
 /**
  * @author  Luca Pascucci
@@ -17,12 +16,10 @@ public class View extends JFrame implements ActionListener{
 
     private Controller controller;
     private JTextArea textArea = new JTextArea(40,50);
-    private JFileChooser fileChooser;
     private JButton startACObtn = new JButton("Esegui Algoritmo ACO");
     private JButton startGAbtn = new JButton("Esegui Algoritmo Genetico");
     private final JMenuItem loadDataset = new JMenuItem("Carica");
     private final JMenuItem saveResult = new JMenuItem("Salva");
-
 
     public View (){
 
@@ -107,19 +104,19 @@ public class View extends JFrame implements ActionListener{
         }
 
         if (e.getSource().equals(this.loadDataset)){
-            this.fileChooser = new JFileChooser();
-            this.fileChooser.setDialogTitle("Scegli il dataset da caricare");
-            this.fileChooser.setFileFilter(new FileNameExtensionFilter(".txt", "txt"));
-            if (this.fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                this.controller.loadDataCmd(this.fileChooser.getSelectedFile().getAbsolutePath());
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Scegli il dataset da caricare");
+            fileChooser.setFileFilter(new FileNameExtensionFilter(".txt", "txt"));
+            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                this.controller.loadDataCmd(fileChooser.getSelectedFile().getAbsolutePath());
             }
         }
 
         if (e.getSource().equals(this.saveResult)){
-            this.fileChooser = new JFileChooser();
-            this.fileChooser.setDialogTitle("Scegli dove salvare il risultato");
-            if (this.fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-                this.controller.saveDataCmd(this.fileChooser.getSelectedFile().getAbsolutePath());
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Scegli dove salvare il risultato");
+            if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                this.controller.saveDataCmd(fileChooser.getSelectedFile().getAbsolutePath());
             }
         }
 

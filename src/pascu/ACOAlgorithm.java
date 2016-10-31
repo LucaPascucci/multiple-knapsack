@@ -37,7 +37,7 @@ public class ACOAlgorithm extends Thread {
         this.valueOfItems.add(0.0); //aggiungo un oggetto fittizio da cui partire per costruire ogni mia soluzione
         this.valueOfItems.addAll(valueOfItems);
 
-        this.weightOfItems.add(0.0);
+        this.weightOfItems.add(0.0); //aggiungo un oggetto fittizio da cui partire per costruire ogni mia soluzione
         this.weightOfItems.addAll(weightOfItems);
 
         this.knapsaksCapacity = new ArrayList<>(knapsaksCapacity);

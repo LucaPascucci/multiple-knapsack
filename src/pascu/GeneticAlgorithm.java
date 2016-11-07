@@ -18,8 +18,9 @@ public class GeneticAlgorithm extends Thread{
 
     private View view;
     private List<Double> knapsacksVolume;
-    private List<Double> weightOfItems;
+    private double[][] weightOfItems;
     private List<Double> valueOfItems;
+    private double optimumValue;
 
     private int numberItems;
     private List<String> population;
@@ -35,13 +36,14 @@ public class GeneticAlgorithm extends Thread{
     private double bestFitness;
     private String bestChromosome;
 
-    public GeneticAlgorithm(final View view, final List<Double> knapsacksVolume, final List<Double> weightOfItems, final List<Double> valueOfItems){
+    public GeneticAlgorithm(final View view, final List<Double> knapsacksVolume, final double[][] weightOfItems, final List<Double> valueOfItems, final double optimumValue){
         super("Genetic Algorithm Thread");
         this.view = view;
         this.knapsacksVolume = new ArrayList<>(knapsacksVolume);
-        this.weightOfItems = new ArrayList<>(weightOfItems);
+        this.weightOfItems = weightOfItems;
         this.valueOfItems = new ArrayList<>(valueOfItems);
-        this.numberItems = this.weightOfItems.size();
+        this.optimumValue = optimumValue;
+        this.numberItems = this.valueOfItems.size();
         this.population = new ArrayList<>();
         this.populationFitness = new ArrayList<>();
         this.generationCount = 0;
@@ -151,7 +153,7 @@ public class GeneticAlgorithm extends Thread{
         for (int i = 0; i < this.numberItems; i ++){
             knapsack = Character.getNumericValue(chromosome.charAt(i));
             if (knapsack > 0) {
-                double tmpVolume = freeVolume.get(knapsack - 1) - this.weightOfItems.get(i);
+                double tmpVolume = freeVolume.get(knapsack - 1) - this.weightOfItems[(knapsack - 1)][i];
                 freeVolume.set(knapsack - 1,tmpVolume);
                 fitnessValue += this.valueOfItems.get(i);
             }
@@ -257,7 +259,7 @@ public class GeneticAlgorithm extends Thread{
     private void showBestResult(){
         if (!"".equals(this.bestChromosome)){
             this.view.appendText("Soluzione migliore trovata: " + this.bestChromosome);
-            this.view.appendText(NEW_LINE + "Valore totale con la soluzione migliore trovata = " + this.bestFitness);
+            this.view.appendText(NEW_LINE + "Valore totale con la soluzione migliore trovata = " + this.bestFitness + "  - Ottima conosciuta: " + this.optimumValue);
         } else {
             this.view.appendText("Non è stata riscontrata nessuna soluzione accettabile.");
         }

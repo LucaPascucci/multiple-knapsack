@@ -16,8 +16,9 @@ public class Controller {
     private static final String REGEX = "\\W+";
     private View view;
     private List<Double> knapsacksVolume;
-    private List<Double> weightOfItems;
     private List<Double> valueOfItems;
+    private double[][] weightOfItems;
+    private Double optimumValue;
 
     public Controller(final View view){
         this.view = view;
@@ -26,24 +27,69 @@ public class Controller {
     public void loadDataCmd(final String path) {
 
         this.knapsacksVolume = new ArrayList<>();
-        this.weightOfItems = new ArrayList<>();
         this.valueOfItems = new ArrayList<>();
 
         String line;
         String[] splittedLine;
         BufferedReader in;
+        int knapsacks;
+        int items;
+        int temp_item;
+        int temp_knap;
+
         try {
             in = new BufferedReader(new FileReader(path));
             line = in.readLine();
             splittedLine = line.split(REGEX);
-            for (String s: splittedLine){
-                this.knapsacksVolume.add(Double.parseDouble(s));
-            }
-            while ((line = in.readLine()) != null) {
+            knapsacks = Integer.parseInt(splittedLine[0]);
+            items = Integer.parseInt(splittedLine[1]);
+            this.weightOfItems = new double[knapsacks][items];
+
+            //Lettura valori degli oggetti
+            temp_item = 0;
+            while (temp_item < items){
+                line = in.readLine();
                 splittedLine = line.split(REGEX);
-                this.weightOfItems.add(Double.parseDouble(splittedLine[0]));
-                this.valueOfItems.add(Double.parseDouble(splittedLine[1]));
+                for (String s: splittedLine){
+                    this.valueOfItems.add(Double.parseDouble(s));
+                    temp_item++;
+                }
             }
+
+            //Lettura pesi degli zainetti
+            temp_knap = 0;
+            while (temp_knap < knapsacks){
+                line = in.readLine();
+                splittedLine = line.split(REGEX);
+                for (String s: splittedLine){
+                    this.knapsacksVolume.add(Double.parseDouble(s));
+                    temp_knap++;
+                }
+            }
+
+            //Lettura pesi degli oggetti
+            temp_knap = 0;
+            temp_item = 0;
+            while (temp_knap < knapsacks){
+                line = in.readLine();
+                splittedLine = line.split(REGEX);
+                for (String s: splittedLine){
+                    this.weightOfItems[temp_knap][temp_item] = Double.parseDouble(s);
+                    temp_item++;
+                }
+                if (temp_item == items){
+                    temp_item = 0;
+                    temp_knap++;
+                }
+            }
+
+            //Lettura valore ottimo
+            while ((line = in.readLine()) != null) {
+                if (!line.isEmpty()){
+                    this.optimumValue = Double.parseDouble(line);
+                }
+            }
+
             in.close();
             this.view.resetTextArea();
             this.view.changeButtonsState(true);
@@ -73,21 +119,28 @@ public class Controller {
         this.view.resetTextArea();
         this.view.changeButtonsState(false);
         if (value) {
-            new ACOAlgorithm(this.view, this.knapsacksVolume, this.weightOfItems, this.valueOfItems).start();
+            //new ACOAlgorithm(this.view, this.knapsacksVolume, this.weightOfItems, this.valueOfItems).start();
         } else {
-            new GeneticAlgorithm(this.view, this.knapsacksVolume, this.weightOfItems, this.valueOfItems).start();
+            new GeneticAlgorithm(this.view, this.knapsacksVolume, this.weightOfItems, this.valueOfItems, this.optimumValue).start();
         }
     }
 
     private void printData(){
         this.view.resetTextArea();
+        this.view.appendText("Optimum Value: " + this.optimumValue + NEW_LINE + NEW_LINE);
+
         this.view.appendText("Knapsacks:");
         for (int i = 0; i < this.knapsacksVolume.size(); i++){
             this.view.appendText(NEW_LINE + (i + 1) + ") Volume: " + this.knapsacksVolume.get(i));
         }
+
         this.view.appendText(NEW_LINE + NEW_LINE + "Items:");
         for (int i = 0; i < this.valueOfItems.size(); i++){
-            this.view.appendText(NEW_LINE + (i + 1) + ") Weight: " + this.weightOfItems.get(i) + " - Value: " + this.valueOfItems.get(i));
+            String temp_weights = "";
+            for (int j = 0; j < this.knapsacksVolume.size(); j++) {
+                temp_weights += "" + this.weightOfItems[j][i] + " | ";
+            }
+            this.view.appendText(NEW_LINE + (i + 1) + ") Value: " + this.valueOfItems.get(i) + " - Weights: " + temp_weights);
         }
     }
 

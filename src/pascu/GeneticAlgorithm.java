@@ -12,7 +12,7 @@ public class GeneticAlgorithm extends Thread{
 
     private static final String NEW_LINE = "\n";
 
-    private static final int NUMBER_GENERATIONS = 70;
+    private static final int NUMBER_GENERATIONS = 30;
     private static final double PROB_CROSSOVER = 0.6;
     private static final double PROB_MUTATION = 0.1;
 
@@ -260,6 +260,7 @@ public class GeneticAlgorithm extends Thread{
         if (!"".equals(this.bestChromosome)){
             this.view.appendText("Soluzione migliore trovata: " + this.bestChromosome);
             this.view.appendText(NEW_LINE + "Valore totale con la soluzione migliore trovata = " + this.bestFitness + "  - Ottima conosciuta: " + this.optimumValue);
+            this.checkBestSolution(this.bestChromosome);
         } else {
             this.view.appendText("Non è stata riscontrata nessuna soluzione accettabile.");
         }
@@ -296,6 +297,37 @@ public class GeneticAlgorithm extends Thread{
         }
 
         this.view.appendText(NEW_LINE + NEW_LINE + "-----------------------------------------" + NEW_LINE + NEW_LINE);
+    }
+
+
+    private void checkBestSolution(String chromosome){
+
+        List<Double> freeVolume = new ArrayList<>(this.knapsacksVolume);
+        List<Double> volumeOccupato = new ArrayList<>();
+        for (Double v : freeVolume){
+            volumeOccupato.add(0.0);
+        }
+
+
+        int knapsack;
+
+        //Riduce lo spazio disponibile negli zainetti in base agli oggetti inseriti e calcola la fitness totale
+        for (int i = 0; i < this.numberItems; i ++){
+            knapsack = Character.getNumericValue(chromosome.charAt(i));
+            if (knapsack > 0) {
+
+                double tmpVolume1 = volumeOccupato.get(knapsack - 1) + this.weightOfItems[(knapsack - 1)][i];
+                volumeOccupato.set(knapsack - 1, tmpVolume1);
+
+                double tmpVolume = freeVolume.get(knapsack - 1) - this.weightOfItems[(knapsack - 1)][i];
+                freeVolume.set(knapsack - 1,tmpVolume);
+            }
+        }
+
+        this.view.appendText(NEW_LINE + NEW_LINE + "Controllo soluzione: " + NEW_LINE);
+        for (int i = 0; i < freeVolume.size(); i ++){
+            this.view.appendText("Knapsack " + (i+1) + ") " + volumeOccupato.get(i) + " Volume occupato | " + freeVolume.get(i) + " Free space" + NEW_LINE);
+        }
     }
 
 }

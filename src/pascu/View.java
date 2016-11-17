@@ -5,6 +5,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 /**
  * @author  Luca Pascucci
@@ -105,9 +106,15 @@ public class View extends JFrame implements ActionListener{
 
         if (e.getSource().equals(this.loadDataset)){
             JFileChooser fileChooser = new JFileChooser();
+            //fileChooser.setMultiSelectionEnabled(true);
             fileChooser.setDialogTitle("Scegli il dataset da caricare");
             fileChooser.setFileFilter(new FileNameExtensionFilter(".txt", "txt"));
             if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                /*File[] files = fileChooser.getSelectedFiles();
+                for (int i = 0; i < files.length; i++){
+                    this.controller.updateDataWeka(files[i].getAbsolutePath());
+                }*/
+                //this.controller.updateDataWeka(fileChooser.getSelectedFile().getAbsolutePath());
                 this.controller.loadDataCmd(fileChooser.getSelectedFile().getAbsolutePath());
             }
         }

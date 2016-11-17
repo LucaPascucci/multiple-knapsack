@@ -15,5 +15,7 @@ public class Main {
         view.attachObserver(controller);
         view.setVisible(true);
     }
+
+
 }
 

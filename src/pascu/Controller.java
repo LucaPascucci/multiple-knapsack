@@ -144,4 +144,42 @@ public class Controller {
         }
     }
 
+    public void updateDataWeka(final String path) {
+
+        BufferedReader in;
+        PrintWriter writer;
+        String line;
+
+        try {
+            writer = new PrintWriter(path + ".txt", "UTF-8");
+            in = new BufferedReader(new FileReader(path));
+
+            line = in.readLine();
+            line += NEW_LINE;
+            writer.print(line);
+            while ((line = in.readLine()) != null) {
+                String value = "";
+                if (line.endsWith("2")){
+                    value = "b";
+                }else if (line.endsWith("4")){
+                    value = "m";
+                }
+                String temp = line.substring(0,line.length()-1);
+                temp += value;
+                //String temp = line.substring(line.indexOf(",") + 1);
+                //String temp = line.substring(0,line.indexOf(";"));
+
+                temp += NEW_LINE;
+                writer.print(temp);
+            }
+
+            in.close();
+            writer.close();
+
+
+        } catch (IOException e) {
+            this.view.showErrorMessage("Errore nel salvataggio");
+
+        }
+    }
 }

@@ -14,7 +14,7 @@ public class GeneticAlgorithm extends Thread{
 
     private static final int NUMBER_GENERATIONS = 30;
     private static final double PROB_CROSSOVER = 0.6;
-    private static final double PROB_MUTATION = 0.1;
+    private static final double PROB_MUTATION = 0.05;
 
     private View view;
     private List<Double> knapsacksVolume;
@@ -55,6 +55,7 @@ public class GeneticAlgorithm extends Thread{
     @Override
     public void run() {
         super.run();
+        long startTime = System.currentTimeMillis();
         this.view.appendText(this.getName() + NEW_LINE + NEW_LINE);
 
         //inizializza la popolazione randomicamente
@@ -93,6 +94,7 @@ public class GeneticAlgorithm extends Thread{
         }
 
         this.showBestResult();
+        this.view.appendText(NEW_LINE + "Tempo di esecuzione: " + (System.currentTimeMillis()-startTime) + " ms");
 
         //riabilita l'utilizzo dei bottoni nella view
         this.view.setSaveEnabled(true);
@@ -259,7 +261,8 @@ public class GeneticAlgorithm extends Thread{
     private void showBestResult(){
         if (!"".equals(this.bestChromosome)){
             this.view.appendText("Soluzione migliore trovata: " + this.bestChromosome);
-            this.view.appendText(NEW_LINE + "Valore totale con la soluzione migliore trovata = " + this.bestFitness + "  - Ottima conosciuta: " + this.optimumValue);
+            //this.view.appendText(NEW_LINE + "Valore totale con la soluzione migliore trovata = " + this.bestFitness + "  - Ottima conosciuta: " + this.optimumValue);
+            this.view.appendText(NEW_LINE + "Valore totale con la soluzione migliore trovata = " + this.bestFitness);
             this.checkBestSolution(this.bestChromosome);
         } else {
             this.view.appendText("Non è stata riscontrata nessuna soluzione accettabile.");
@@ -308,7 +311,6 @@ public class GeneticAlgorithm extends Thread{
             volumeOccupato.add(0.0);
         }
 
-
         int knapsack;
 
         //Riduce lo spazio disponibile negli zainetti in base agli oggetti inseriti e calcola la fitness totale
@@ -326,7 +328,7 @@ public class GeneticAlgorithm extends Thread{
 
         this.view.appendText(NEW_LINE + NEW_LINE + "Controllo soluzione: " + NEW_LINE);
         for (int i = 0; i < freeVolume.size(); i ++){
-            this.view.appendText("Knapsack " + (i+1) + ") " + volumeOccupato.get(i) + " Volume occupato | " + freeVolume.get(i) + " Free space" + NEW_LINE);
+            this.view.appendText("Knapsack " + (i+1) + ") " + volumeOccupato.get(i) + " Volume occupato | " + freeVolume.get(i) + " Volume Libero" + NEW_LINE);
         }
     }
 

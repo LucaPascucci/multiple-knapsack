@@ -12,7 +12,7 @@ public class GeneticAlgorithm extends Thread{
 
     private static final String NEW_LINE = "\n";
 
-    private static final int NUMBER_GENERATIONS = 30;
+    private static final int NUMBER_GENERATIONS = 60;
     private static final double PROB_CROSSOVER = 0.6;
     private static final double PROB_MUTATION = 0.05;
 
@@ -114,14 +114,14 @@ public class GeneticAlgorithm extends Thread{
 
     /**
      * Genera un cromosoma grande come la lista degli elementi
-     * I valori dei singoli geni sono compresi tra 0 e N° knapsack (generati random)
+     * I valori dei singoli geni sono compresi tra 0 e 1
      @return il cromosoma prodotto.
      */
     private String generateChromosome(){
 
         StringBuilder chromosome = new StringBuilder(this.numberItems);
 
-        new Random().ints(this.numberItems, 0, this.knapsacksVolume.size() + 1).forEach(n -> chromosome.append(n));
+        new Random().ints(this.numberItems, 0, 2).forEach(n -> chromosome.append(n));
 
         return chromosome.toString();
     }
@@ -144,27 +144,24 @@ public class GeneticAlgorithm extends Thread{
      * @param chromosome - Cromosoma da valutare
      * @return  il valore di fitness
      */
-
     private double calculateFitness(String chromosome){
 
         double fitnessValue = 0;
         List<Double> freeVolume = new ArrayList<>(this.knapsacksVolume);
-        int knapsack;
 
-        //Riduce lo spazio disponibile negli zainetti in base agli oggetti inseriti e calcola la fitness totale
-        for (int i = 0; i < this.numberItems; i ++){
-            knapsack = Character.getNumericValue(chromosome.charAt(i));
-            if (knapsack > 0) {
-                double tmpVolume = freeVolume.get(knapsack - 1) - this.weightOfItems[(knapsack - 1)][i];
-                freeVolume.set(knapsack - 1,tmpVolume);
+        for (int i = 0; i < this.numberItems; i++){
+            if (Character.getNumericValue(chromosome.charAt(i)) == 1){
                 fitnessValue += this.valueOfItems.get(i);
+                for (int j = 0; j < freeVolume.size(); j++) {
+                    freeVolume.set(j,(freeVolume.get(j) - this.weightOfItems[j][i]));
+                }
             }
         }
 
         //Controlla gli zainetti sono stati riempiti correttamente. Al primo zainetto troppo pieno invalida la fitness
         for (Double volume: freeVolume){
             if (volume < 0) {
-                return 0;
+                fitnessValue = 0;
             }
         }
         return fitnessValue;
@@ -227,10 +224,11 @@ public class GeneticAlgorithm extends Thread{
             String chromosome = iterator.next();
             for (int i = 0; i < chromosome.length(); i++) {
                 if (Math.random() <= PROB_MUTATION) { //se il numero casuale è minore o uguale della probabilità di mutazione, cambio valore al gene
-                    int knapsack = Character.getNumericValue(chromosome.charAt(i));
-                    int newgene = new Random().nextInt(this.knapsacksVolume.size() + 1);
-                    while (knapsack == newgene){
-                        newgene = new Random().nextInt(this.knapsacksVolume.size() + 1);
+                    int newgene;
+                    if (Character.getNumericValue(chromosome.charAt(i)) == 1){
+                        newgene = 0;
+                    } else {
+                        newgene = 1;
                     }
                     chromosome = chromosome.substring(0, i) +  newgene + chromosome.substring(i + 1);
                     iterator.set(chromosome);
@@ -241,12 +239,17 @@ public class GeneticAlgorithm extends Thread{
 
     }
 
+    /**
+     * Funzione utilizzata per prelevare il miglior cromosoma di una generazione
+     * @return La stringa che rappresenta la migliore soluzione di una generazione
+     */
     private String getBestSolutionOfGeneration(){
         double maxFitness = Collections.max(this.populationFitness);
         if (maxFitness != 0){
             for (int i = 0; i < this.populationFitness.size(); i++){
                 if (maxFitness == this.populationFitness.get(i)){
 
+                    //Se il risultato è migliore del globale aggiorna la migliore soluzione incontrata
                     if (this.bestFitness < this.populationFitness.get(i)){
                         this.bestFitness = this.populationFitness.get(i);
                         this.bestChromosome = this.population.get(i);
@@ -256,17 +259,6 @@ public class GeneticAlgorithm extends Thread{
             }
         }
         return "";
-    }
-
-    private void showBestResult(){
-        if (!"".equals(this.bestChromosome)){
-            this.view.appendText("Soluzione migliore trovata: " + this.bestChromosome);
-            //this.view.appendText(NEW_LINE + "Valore totale con la soluzione migliore trovata = " + this.bestFitness + "  - Ottima conosciuta: " + this.optimumValue);
-            this.view.appendText(NEW_LINE + "Valore totale con la soluzione migliore trovata = " + this.bestFitness);
-            this.checkBestSolution(this.bestChromosome);
-        } else {
-            this.view.appendText("Non è stata riscontrata nessuna soluzione accettabile.");
-        }
     }
 
     private void printGeneration(int generation){
@@ -302,27 +294,30 @@ public class GeneticAlgorithm extends Thread{
         this.view.appendText(NEW_LINE + NEW_LINE + "-----------------------------------------" + NEW_LINE + NEW_LINE);
     }
 
+    private void showBestResult(){
+        if (!"".equals(this.bestChromosome)){
+            this.view.appendText("Soluzione migliore trovata: " + this.bestChromosome);
+            this.view.appendText(NEW_LINE + "Valore totale con la soluzione migliore trovata = " + this.bestFitness + "  - Ottima conosciuta: " + this.optimumValue);
+            this.checkBestSolution(this.bestChromosome);
+        } else {
+            this.view.appendText("Non è stata riscontrata nessuna soluzione accettabile.");
+        }
+    }
 
     private void checkBestSolution(String chromosome){
 
         List<Double> freeVolume = new ArrayList<>(this.knapsacksVolume);
         List<Double> volumeOccupato = new ArrayList<>();
-        for (Double v : freeVolume){
+        for (int i = 0; i < freeVolume.size(); i++) {
             volumeOccupato.add(0.0);
         }
 
-        int knapsack;
-
-        //Riduce lo spazio disponibile negli zainetti in base agli oggetti inseriti e calcola la fitness totale
-        for (int i = 0; i < this.numberItems; i ++){
-            knapsack = Character.getNumericValue(chromosome.charAt(i));
-            if (knapsack > 0) {
-
-                double tmpVolume1 = volumeOccupato.get(knapsack - 1) + this.weightOfItems[(knapsack - 1)][i];
-                volumeOccupato.set(knapsack - 1, tmpVolume1);
-
-                double tmpVolume = freeVolume.get(knapsack - 1) - this.weightOfItems[(knapsack - 1)][i];
-                freeVolume.set(knapsack - 1,tmpVolume);
+        for (int i = 0; i < this.numberItems; i++){
+            if (Character.getNumericValue(chromosome.charAt(i)) == 1){
+                for (int j = 0; j < freeVolume.size(); j++) {
+                    freeVolume.set(j,(freeVolume.get(j) - this.weightOfItems[j][i]));
+                    volumeOccupato.set(j, (volumeOccupato.get(j) + this.weightOfItems[j][i]));
+                }
             }
         }
 

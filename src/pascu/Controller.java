@@ -120,6 +120,7 @@ public class Controller {
         this.view.changeButtonsState(false);
         if (value) {
             //new ACOAlgorithm(this.view, this.knapsacksVolume, this.weightOfItems, this.valueOfItems).start();
+            this.view.changeButtonsState(true);
         } else {
             new GeneticAlgorithm(this.view, this.knapsacksVolume, this.weightOfItems, this.valueOfItems, this.optimumValue).start();
         }
@@ -141,45 +142,6 @@ public class Controller {
                 temp_weights += "" + this.weightOfItems[j][i] + " | ";
             }
             this.view.appendText(NEW_LINE + (i + 1) + ") Value: " + this.valueOfItems.get(i) + " - Weights: " + temp_weights);
-        }
-    }
-
-    public void updateDataWeka(final String path) {
-
-        BufferedReader in;
-        PrintWriter writer;
-        String line;
-
-        try {
-            writer = new PrintWriter(path + ".txt", "UTF-8");
-            in = new BufferedReader(new FileReader(path));
-
-            line = in.readLine();
-            line += NEW_LINE;
-            writer.print(line);
-            while ((line = in.readLine()) != null) {
-                String value = "";
-                if (line.endsWith("2")){
-                    value = "b";
-                }else if (line.endsWith("4")){
-                    value = "m";
-                }
-                String temp = line.substring(0,line.length()-1);
-                temp += value;
-                //String temp = line.substring(line.indexOf(",") + 1);
-                //String temp = line.substring(0,line.indexOf(";"));
-
-                temp += NEW_LINE;
-                writer.print(temp);
-            }
-
-            in.close();
-            writer.close();
-
-
-        } catch (IOException e) {
-            this.view.showErrorMessage("Errore nel salvataggio");
-
         }
     }
 }

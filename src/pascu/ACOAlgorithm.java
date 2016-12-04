@@ -27,7 +27,7 @@ public class ACOAlgorithm extends Thread {
 
     /*
          Tau = desiderabilità a posteriori (soluzione migliore precedente)
-         Eta = desiderabilità ad anteriori (soluzione migliore )
+         Eta = desiderabilità a priori (soluzione migliore )
      */
 
     public ACOAlgorithm (final View view, final List<Double> knapsaksCapacity, final List<Double> weightOfItems, final List<Double> valueOfItems) {

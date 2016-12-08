@@ -119,8 +119,7 @@ public class Controller {
         this.view.resetTextArea();
         this.view.changeButtonsState(false);
         if (value) {
-            //new ACOAlgorithm(this.view, this.knapsacksVolume, this.weightOfItems, this.valueOfItems).start();
-            this.view.changeButtonsState(true);
+            new ACOAlgorithm(this.view, this.knapsacksVolume, this.weightOfItems, this.valueOfItems, this.optimumValue).start();
         } else {
             new GeneticAlgorithm(this.view, this.knapsacksVolume, this.weightOfItems, this.valueOfItems, this.optimumValue).start();
         }

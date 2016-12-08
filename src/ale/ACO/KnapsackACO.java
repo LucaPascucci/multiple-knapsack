@@ -6,14 +6,14 @@ import ale.common.View;
 
 public class KnapsackACO {
 
-    //per calcolare l'attrattività e la traccia
+	//per calcolare l'attrattività e la traccia
 	private double alpha = 0.5;
 	private double beta = 0.5;
 
-    //variabile dell'evaporazione
+	//variabile dell'evaporazione
 	private double rho = 0.9;
 
-    //numero formiche
+	//numero formiche
 	private int nAnts;
 
 	private int nIters = 20;
@@ -57,7 +57,7 @@ public class KnapsackACO {
 		}
 		this.view.appendText("\nValore della migliore soluzione trovata: " + Integer.toString(this.maxValue));
 	}
-	
+
 	/**
 	 * Inizializzazione di tau ed eta.
 	 */
@@ -113,7 +113,7 @@ public class KnapsackACO {
 			this.updateTau(this.costs, this.sol);
 		}
 	}
-	
+
 	/**
 	 * Metodo per costruire una singola soluzione, basandosi sulla traccia tau e sulla attrattività eta.
 	 */
@@ -133,7 +133,7 @@ public class KnapsackACO {
 		sol[0] = 0;
 		added[0] = true;
 		check[0] = true;
-		
+
 		for (int i = 1; i < this.nItems; i++) {
 			for (int j = 0; j < this.nItems; j++) {
 				if (check[j]) {
@@ -142,10 +142,10 @@ public class KnapsackACO {
 					val[j] = Math.pow(this.eta[sol[i]][j], this.alpha) * Math.pow(this.tau[sol[i]][j], this.beta);
 				}
 			}
-			
+
 			k = this.montecarlo(val);
 			check[k] = true;
-			
+
 			//se il peso totale col nuovo oggetto non sfora la capacità dello zaino, lo aggiungo, altrimenti no
 			if (currentWeight + this.weightOfItems.get(k) <= this.knapsackCapacity) {
 				sol[i] = k;
@@ -154,7 +154,7 @@ public class KnapsackACO {
 				currentWeight += this.weightOfItems.get(k);
 			}
 		}
-		
+
 		//se ho trovato una soluzione globale migliore, la aggiorno con quella trovata
 		if (z > this.maxValue) {
 			this.maxValue = z;
@@ -169,7 +169,7 @@ public class KnapsackACO {
 
 		return z;
 	}
-	
+
 	/**
 	 * Selezione probabilistica con Roulette Wheel Selection (montecarlo).
 	 */
@@ -190,7 +190,7 @@ public class KnapsackACO {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * Aggiornamento della traccia tau.
 	 */

@@ -31,12 +31,12 @@ public class ACOAlgorithm extends Thread {
 	private int nAnts;
 
 	//numero iterazioni
-	private int nIters = 1;
+	private int nIters = 20;
 
-    /*
+	/*
 		 Tau = desiderabilità a posteriori (soluzione migliore precedente)
-         Eta = desiderabilità a priori (soluzione migliore )
-     */
+		 Eta = desiderabilità a priori (soluzione migliore )
+	 */
 	private double[][] eta;
 	private double[][] tau;
 
@@ -52,17 +52,26 @@ public class ACOAlgorithm extends Thread {
 
 		this.knapsacksVolume = new ArrayList<>(knapsaksCapacity);
 
-		//this.valueOfItems.add(0.0); //aggiungo un oggetto fittizio da cui partire per costruire ogni mia soluzione
-		this.valueOfItems = new ArrayList<>(valueOfItems);
-		//this.valueOfItems.addAll(valueOfItems);
-
-		//this.weightOfItems.add(0.0); //aggiungo un oggetto fittizio da cui partire per costruire ogni mia soluzione
-		this.weightOfItems = weightOfItems;
-
-		this.optimumValue = optimumValue;
+		this.valueOfItems = new ArrayList<>();
+		this.valueOfItems.add(0.0); //aggiungo un oggetto fittizio da cui partire per costruire ogni mia soluzione
+		this.valueOfItems.addAll(valueOfItems);
 
 		this.nItems = this.valueOfItems.size();
-		this.nAnts = this.nItems;
+		this.nAnts = this.nItems - 1; //numero di formiche uguale al numero di elementi reali
+
+		//aggiungo un oggetto fittizio da cui partire per costruire ogni mia soluzione
+		this.weightOfItems = new double[this.knapsacksVolume.size()][this.nItems];
+		for (int i = 0; i < this.nItems; i++) {
+			for (int j = 0; j < this.knapsacksVolume.size(); j++) {
+				if (i == 0) {
+					this.weightOfItems[j][i] = 0.0;
+				} else {
+					this.weightOfItems[j][i] = weightOfItems[j][i - 1];
+				}
+			}
+		}
+
+		this.optimumValue = optimumValue;
 
 		this.eta = new double[this.nItems][this.nItems];
 		this.tau = new double[this.nItems][this.nItems];
@@ -79,12 +88,9 @@ public class ACOAlgorithm extends Thread {
 		this.initialize();
 		this.antSearch();
 		this.view.appendText(NEW_LINE + "Migliore soluzione trovata: ");
-		double bestValueTmp = 0.0;
 		for (int object : this.bestSol) {
 			this.view.appendText(" " + object);
-			bestValueTmp += this.valueOfItems.get(object);
 		}
-		this.view.appendText(" Value : " + bestValueTmp);
 		this.view.appendText(" -> Best Value : " + this.maxValue);
 		this.view.appendText(NEW_LINE + "Migliore soluzione conosciuta: " + this.optimumValue);
 		this.view.setSaveEnabled(true);
@@ -101,13 +107,12 @@ public class ACOAlgorithm extends Thread {
 		double ratio1;
 		double ratio2;
 		for (int i = 0; i < this.nItems; i++) {
-			ratio1 = (this.valueOfItems.get(i) / getDeltaOfItems(i)) / this.knapsacksVolume.size();
-			for (int j = 0; j < this.nItems; j++){
-				ratio2 = (this.valueOfItems.get(j) / getDeltaOfItems(j)) / this.knapsacksVolume.size();
-				if (i != j){
-					//TODO inserire il valore in eta
+			ratio1 = i == 0 ? 0 : (this.valueOfItems.get(i) / getDeltaOfItems(i)) / this.knapsacksVolume.size();
+			for (int j = 0; j < this.nItems; j++) {
+				ratio2 = i == 0 ? 0 : (this.valueOfItems.get(j) / getDeltaOfItems(j)) / this.knapsacksVolume.size();
+				if (i != j) {
 					this.eta[i][j] = Math.abs(ratio1 - ratio2);
-					if (this.eta[i][j] > max){
+					if (this.eta[i][j] > max) {
 						max = this.eta[i][j];
 					}
 				} else {
@@ -120,17 +125,17 @@ public class ACOAlgorithm extends Thread {
 
 		//Inizializzo tau
 		for (int i = 0; i < this.nItems; i++) {
-			for (int j = 0; j < this.nItems; j++){
-				this.tau[i][j] = (1.0 / this.nItems);
-				//this.tau[i][j] = tau0;
+			for (int j = 0; j < this.nItems; j++) {
+				//this.tau[i][j] = (1.0 / this.nItems);
+				this.tau[i][j] = tau0;
 				this.eta[i][j] = max - this.eta[i][j];
 			}
 		}
 	}
 
-	private double getDeltaOfItems(int item){
+	private double getDeltaOfItems(int item) {
 		double delta = 0.0;
-		for (int knap = 0; knap < this.knapsacksVolume.size(); knap++){
+		for (int knap = 0; knap < this.knapsacksVolume.size(); knap++) {
 			double tmp = this.weightOfItems[knap][item] / this.knapsacksVolume.get(knap);
 			delta += tmp;
 		}
@@ -145,14 +150,14 @@ public class ACOAlgorithm extends Thread {
 		this.sol = new int[this.nItems][this.nItems];
 		this.costs = new int[this.nItems];
 
-		for (int i = 0; i < this.nIters; i++){
-			if (i != 0){
+		for (int i = 0; i < this.nIters; i++) {
+			if (i != 0) {
 				this.view.appendText(NEW_LINE);
 			}
 			this.view.appendText("Iterazione: " + (i + 1) + TAB + "Valore" + TAB + "Peso");
 
-			for (int ant = 0; ant < this.nAnts; ant++){
-				this.view.appendText( NEW_LINE + "Formica " + (ant + 1) + ": " + TAB);
+			for (int ant = 0; ant < this.nAnts; ant++) {
+				this.view.appendText(NEW_LINE + "Formica " + (ant + 1) + ": " + TAB);
 				this.costs[ant] = constructSol(this.sol[ant]);
 			}
 			this.view.appendText(NEW_LINE);
@@ -173,33 +178,41 @@ public class ACOAlgorithm extends Thread {
 		boolean[] check = new boolean[this.nItems]; //array che indica quali oggetti ho provato a aggiungere
 		double[] val = new double[this.nItems];
 
-		for (int knap = 0; knap < this.knapsacksVolume.size(); knap++){
+		//Inizializzo peso della soluzione corrente
+		for (int knap = 0; knap < this.knapsacksVolume.size(); knap++) {
 			currentWeight[knap] = 0.0;
 		}
 
+		//inizializzo elementi da inserire ed inseriti
 		for (int i = 0; i < this.nItems; i++) {
 			added[i] = false;
 			check[i] = false;
 		}
 
-		for (int i = 0; i < this.nItems; i++) {
+		sol[0] = 0;
+		added[0] = true;
+		check[0] = true;
+
+		for (int i = 1; i < this.nItems; i++) {
 			for (int j = 0; j < this.nItems; j++) {
 				if (check[j]) {
 					val[j] = 0;
 				} else {
-					val[j] = Math.pow(this.eta[sol[i]][j],this.alpha) * Math.pow(this.tau[sol[i]][j], this.beta);
+					val[j] = Math.pow(this.eta[sol[i]][j], this.alpha) * Math.pow(this.tau[sol[i]][j], this.beta);
 				}
+			}
 
-				int k = this.montecarlo(val);
-				check[k] = true;
+			int k = this.montecarlo(val);
+			check[k] = true; //imposto l'elemento k come provato ad aggiungere
 
-				if (this.checkAdmissibility(k,currentWeight)){
-					sol[i] = k;
-					added[k] = true;
-					z += this.valueOfItems.get(k);
-					for (int knap = 0; knap < this.knapsacksVolume.size(); knap++){
-						currentWeight[knap] += this.weightOfItems[knap][k];
-					}
+			//se il peso totale col nuovo oggetto non sfora la capacità degli zaini, lo aggiungo, altrimenti no
+			if (this.checkAdmissibility(k, currentWeight)) {
+				sol[i] = k;
+				added[k] = true;
+				z += this.valueOfItems.get(k);
+				//aggiorno il peso occupato dagli oggetti presi
+				for (int knap = 0; knap < this.knapsacksVolume.size(); knap++) {
+					currentWeight[knap] += this.weightOfItems[knap][k];
 				}
 			}
 		}
@@ -208,20 +221,34 @@ public class ACOAlgorithm extends Thread {
 		if (z > this.maxValue) {
 			this.maxValue = z;
 			this.bestSol.clear();
-			for (int i = 0; i < added.length; i++) {
-				if(added[i]) {
+			for (int i = 1; i < added.length; i++) {
+				if (added[i]) {
 					this.bestSol.add(i);
 				}
 			}
 		}
+
 		this.view.appendText("" + z);
+		for (int i = 0; i < this.knapsacksVolume.size(); i++) {
+			this.view.appendText(TAB + currentWeight[i]);
+		}
+		/*this.view.appendText(NEW_LINE + "SOL: ");
+		for (int v : sol) {
+			this.view.appendText(" " + v);
+		}
+		this.view.appendText(NEW_LINE + "ADDED: ");
+		for (int i = 1; i < added.length; i++) {
+			if (added[i]) {
+				this.view.appendText(" " + i);
+			}
+		}*/
 		return z;
 	}
 
-	private boolean checkAdmissibility(int object, double[] currentWeight){
+	private boolean checkAdmissibility(int object, double[] currentWeight) {
 
-		for (int knap = 0; knap < this.knapsacksVolume.size(); knap++){
-			if ((currentWeight[knap] + this.weightOfItems[knap][object]) > this.knapsacksVolume.get(knap)){
+		for (int knap = 0; knap < this.knapsacksVolume.size(); knap++) {
+			if ((currentWeight[knap] + this.weightOfItems[knap][object]) > this.knapsacksVolume.get(knap)) {
 				return false;
 			}
 		}
@@ -240,7 +267,7 @@ public class ACOAlgorithm extends Thread {
 
 		double rand = Math.random() * sum;
 		sum = 0;
-		for (int i = 0; i < val.length; i++) {
+		for (int i = 1; i < val.length; i++) {
 			sum += val[i];
 			if (sum >= rand) {
 				return i;
@@ -253,12 +280,15 @@ public class ACOAlgorithm extends Thread {
 	 * Aggiornamento della traccia tau.
 	 */
 	private void updateTau(int[] costs, int[][] sol) {
+
+		//Aggiorno tau considerando l'evaporazione
 		for (int i = 0; i < this.nItems; i++) {
 			for (int j = 0; j < this.nItems; j++) {
 				this.tau[i][j] *= this.rho;
 			}
 		}
 
+		//Aggiorno tau
 		for (int i = 0; i < this.nAnts; i++) {
 			for (int j = 0; j < this.nItems - 1; j++) {
 				this.tau[sol[i][j]][sol[i][j + 1]] += 1.0 / costs[i];

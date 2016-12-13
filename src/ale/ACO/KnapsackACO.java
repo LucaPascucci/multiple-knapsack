@@ -16,7 +16,7 @@ public class KnapsackACO {
 	//numero formiche
 	private int nAnts;
 
-	private int nIters = 20;
+	private int nIters = 1;
 	private int maxValue;
 	private List<Integer> bestSol;
 	private double[][] eta;
@@ -166,7 +166,16 @@ public class KnapsackACO {
 			}
 		}
 		this.view.appendText(z + "\t" + currentWeight);
-
+		this.view.appendText("\n" + "SOL: ");
+		for (int v: sol){
+			this.view.appendText(" " + v);
+		}
+		this.view.appendText("\n" + "ADDED: ");
+		for (int i = 0; i < added.length; i++){
+			if (added[i]){
+				this.view.appendText(" " + i);
+			}
+		}
 		return z;
 	}
 

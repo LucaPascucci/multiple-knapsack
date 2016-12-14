@@ -12,6 +12,8 @@ public class ACOAlgorithm extends Thread {
 
 	private static final String NEW_LINE = "\n";
 	private static final String TAB = "\t";
+	//numero iterazioni
+	private static final int GENERATIONS = 30;
 
 	private View view;
 	private List<Double> knapsacksVolume;
@@ -29,9 +31,6 @@ public class ACOAlgorithm extends Thread {
 
 	//numero formiche
 	private int nAnts;
-
-	//numero iterazioni
-	private int nIters = 20;
 
 	/*
 		 Tau = desiderabilità a posteriori (soluzione migliore precedente)
@@ -150,7 +149,7 @@ public class ACOAlgorithm extends Thread {
 		this.sol = new int[this.nItems][this.nItems];
 		this.costs = new int[this.nItems];
 
-		for (int i = 0; i < this.nIters; i++) {
+		for (int i = 0; i < GENERATIONS; i++) {
 			if (i != 0) {
 				this.view.appendText(NEW_LINE);
 			}

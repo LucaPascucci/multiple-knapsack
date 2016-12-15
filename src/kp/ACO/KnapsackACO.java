@@ -1,8 +1,8 @@
-package ale.ACO;
+package kp.ACO;
 
 import java.util.ArrayList;
 import java.util.List;
-import ale.common.View;
+import kp.common.View;
 
 public class KnapsackACO {
 

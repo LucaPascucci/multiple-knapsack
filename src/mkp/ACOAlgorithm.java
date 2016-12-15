@@ -1,4 +1,4 @@
-package pascu;
+package mkp;
 
 import java.util.ArrayList;
 import java.util.List;

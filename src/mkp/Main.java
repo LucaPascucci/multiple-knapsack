@@ -1,4 +1,4 @@
-package pascu;
+package mkp;
 
 /**
  * @author  Luca Pascucci

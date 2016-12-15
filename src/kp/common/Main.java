@@ -1,4 +1,4 @@
-package ale.common;
+package kp.common;
 
 public class Main {
 

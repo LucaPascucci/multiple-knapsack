@@ -22,7 +22,7 @@ public class ACOAlgorithm extends Thread {
 	private double optimumValue;
 	private int nItems;
 
-	//per calcolare l'attrattività e la traccia
+	//parametri per l'attrattività e la traccia
 	private double alpha = 0.5;
 	private double beta = 0.5;
 
@@ -33,8 +33,8 @@ public class ACOAlgorithm extends Thread {
 	private int nAnts;
 
 	/*
-		 Tau = desiderabilità a posteriori (soluzione migliore precedente)
-		 Eta = desiderabilità a priori (soluzione migliore )
+		Eta = desiderabilità a priori
+		Tau = desiderabilità a posteriori
 	 */
 	private double[][] eta;
 	private double[][] tau;
@@ -105,6 +105,7 @@ public class ACOAlgorithm extends Thread {
 
 		double ratio1;
 		double ratio2;
+		//Inizializzo eta
 		for (int i = 0; i < this.nItems; i++) {
 			ratio1 = i == 0 ? 0 : (this.valueOfItems.get(i) / getDeltaOfItems(i)) / this.knapsacksVolume.size();
 			for (int j = 0; j < this.nItems; j++) {
@@ -125,7 +126,6 @@ public class ACOAlgorithm extends Thread {
 		//Inizializzo tau
 		for (int i = 0; i < this.nItems; i++) {
 			for (int j = 0; j < this.nItems; j++) {
-				//this.tau[i][j] = (1.0 / this.nItems);
 				this.tau[i][j] = tau0;
 				this.eta[i][j] = max - this.eta[i][j];
 			}
@@ -188,6 +188,7 @@ public class ACOAlgorithm extends Thread {
 			check[i] = false;
 		}
 
+		//Inizializzazione della soluzione dell'oggetto fittizio
 		sol[0] = 0;
 		added[0] = true;
 		check[0] = true;
@@ -231,19 +232,12 @@ public class ACOAlgorithm extends Thread {
 		for (int i = 0; i < this.knapsacksVolume.size(); i++) {
 			this.view.appendText(TAB + currentWeight[i]);
 		}
-		/*this.view.appendText(NEW_LINE + "SOL: ");
-		for (int v : sol) {
-			this.view.appendText(" " + v);
-		}
-		this.view.appendText(NEW_LINE + "ADDED: ");
-		for (int i = 1; i < added.length; i++) {
-			if (added[i]) {
-				this.view.appendText(" " + i);
-			}
-		}*/
 		return z;
 	}
 
+	/**
+	 * Vincolo di ammissibilità di un oggetto all'interno della soluzione temporanea della formica
+	 */
 	private boolean checkAdmissibility(int object, double[] currentWeight) {
 
 		for (int knap = 0; knap < this.knapsacksVolume.size(); knap++) {

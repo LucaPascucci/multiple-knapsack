@@ -284,7 +284,7 @@ public class ACOAlgorithm extends Thread {
 		//Aggiorno tau
 		for (int i = 0; i < this.nAnts; i++) {
 			for (int j = 0; j < this.nItems - 1; j++) {
-				this.tau[sol[i][j]][sol[i][j + 1]] += 1.0 / costs[i];
+				this.tau[sol[i][j]][sol[i][j + 1]] += costs[i];
 			}
 		}
 	}
